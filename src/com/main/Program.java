@@ -1,5 +1,8 @@
 package com.main;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,7 +20,7 @@ import com.main.phones.Smartphone;
 public class Program {
 
 	public static Scanner scan = new Scanner(System.in);
-	public static Store store;
+	public static Store store = new Store();
 	public static DataLayer dataLayer = new DataLayer();
 	
 	public static void main(String[] args) {
@@ -30,6 +33,7 @@ public class Program {
 			System.out.println(e.getMessage());
 			return;
 		}
+
 		
 		while(true) {
 			int chosenOption;
@@ -39,6 +43,7 @@ public class Program {
 			System.out.println("1. Додати новий об'єкт до списку");
 			System.out.println("2. Відобразити список усіх об'єктів");
 			System.out.println("3. Пошук об'єктів у списку");
+			System.out.println("4. РОздрукувати відсортовану колекцію об'єктів");
 			System.out.println("0. Завершити роботу");
 			
 			
@@ -50,42 +55,15 @@ public class Program {
 					while(true) {
 						clearConsole();
 						System.out.println("======= Меню додавання нових об'єктів =======");
-						System.out.println("1. Додати новий об'єкт Phone до списку");
-						System.out.println("2. Додати новий об'єкт Smartphone до списку");
-						System.out.println("3. Додати новий об'єкт KeypadPhone до списку");
-						System.out.println("4. Додати новий об'єкт GamingSmartphone до списку");
-						System.out.println("5. Додати новий об'єкт RuggedKeypadPhone до списку");
+						System.out.println("1. Додати новий об'єкт Smartphone до списку");
+						System.out.println("2. Додати новий об'єкт KeypadPhone до списку");
+						System.out.println("3. Додати новий об'єкт GamingSmartphone до списку");
+						System.out.println("4. Додати новий об'єкт RuggedKeypadPhone до списку");
 						System.out.println("0. Повернутися у меню");
 						
-						chosenOption = getUserOption(0, 5);
+						chosenOption = getUserOption(0, 4);
 						
 						if(chosenOption == 1) {
-							clearConsole();
-							// отримуємо дані від користувача
-							Phone newPhone = getPhoneDataFromUserInput();
-							int count = getItemsCountFromUserInput();
-							
-							clearConsole();
-							System.out.println("===== Введені дані про телефон =====");
-							System.out.println(newPhone);
-							System.out.println("Кількість до додавання: " + count);
-							
-							// запитуємо, чи бажає користувач додати введені дані до списку
-							System.out.print("Бажаєте додати дані до списку? (Y/n): ");
-							String answer = scan.next();
-							if(answer.equals("Y") || answer.equals("y")) {
-								store.addNewPhone(newPhone, count);
-							}
-							
-							// запитуємо, чи бажає користувач продовжити запис
-							System.out.print("Бажаєте продовжити запис даних? (Y/n): ");
-							answer = scan.next();
-							if(answer.equals("Y") || answer.equals("y")) {
-								continue;
-							}
-							
-						}
-						else if(chosenOption == 2) {
 							clearConsole();
 							
 							// отримуємо дані від користувача
@@ -112,7 +90,7 @@ public class Program {
 								continue;
 							}
 						}
-						else if(chosenOption == 3) {
+						else if(chosenOption == 2) {
 							clearConsole();
 							
 							// отримуємо дані від користувача
@@ -138,7 +116,7 @@ public class Program {
 								continue;
 							}
 						}
-						else if(chosenOption == 4) {
+						else if(chosenOption == 3) {
 							clearConsole();
 							
 							// отримуємо дані від користувача
@@ -165,7 +143,7 @@ public class Program {
 							}
 						
 						}
-						else if(chosenOption == 5) {
+						else if(chosenOption == 4) {
 							clearConsole();
 							
 							// отримуємо дані від користувача
@@ -264,6 +242,29 @@ public class Program {
 					}
 					clearConsole();
 					break;
+				case 4:
+					clearConsole();
+					
+					Map<Phone, Integer> inventory = store.getAllPhones();
+					// отримуємо список об'єктів у Store
+					List<Phone> phones = new ArrayList<Phone>();
+					phones.addAll(inventory.keySet());
+					
+					// сортуємо список
+					Collections.sort(phones);
+					
+					// друкуємо результат
+					for(Phone phone: phones) {
+						System.out.println(phone);
+						System.out.println("Доступно на складі: " + inventory.get(phone));
+						System.out.println();
+					}
+		
+					scan.nextLine();
+					System.out.print("Щоб повернутися до головного меню натисніть Enter...");
+					scan.nextLine();
+					clearConsole();
+					break;
 				case 0:
 					try {
 						dataLayer.writePhoneCollection(store);
@@ -334,78 +335,7 @@ public class Program {
 		
 		return itemsCount;
 	}
-	
-	/**
-	 * функція для формування нового об'єкта Phone відповідно до даних, введених з клавіатури 
-	 * @return
-	 * Об'єкт Phone, значення полів якого введено користувачем 
-	 */
-	public static Phone getPhoneDataFromUserInput() {
 		
-		String brand, model, color;
-		double price;
-		
-		scan.nextLine();
-		
-		// введення назви бренду
-		while(true) {
-			System.out.print("Введіть бренд телефону: ");
-			brand = scan.nextLine();
-			if(brand.length() == 0) {
-				System.out.println("Назва бренду не повинна бути порожньою!");
-				continue;
-			}
-			else {
-				break;
-			}
-			
-		}
-		
-		// введення назви моделі
-		while(true) {
-			System.out.print("Введіть модель телефону: ");
-			model = scan.nextLine();
-			if(model.length() == 0) {
-				System.out.println("Назва моделі не повинна бути порожньою!");
-			}
-			else {
-				break;
-			}
-		}
-		
-		// введення кольору
-		while(true) {
-			System.out.print("Введіть колір телефону: ");
-			color = scan.nextLine();
-			if(color.length() == 0) {
-				System.out.println("Назва кольору не повинна бути порожньою!");
-			}
-			else {
-				break;
-			}
-		}
-
-		// введення вартості
-		while(true) {
-			System.out.print("Введіть вартість телефону: ");
-			try {
-				price = scan.nextDouble();
-				if(price <= 0) {
-					System.out.println("Вартість телефона повинна бути більшою за нуль!");
-				}
-				else {
-					break;
-				}
-			}
-			catch (Exception e) {
-				System.out.println("Введені дані не є числом! Спробуйте ще раз.");
-				scan.nextLine();
-			}
-		}
-		
-		return new Phone(brand, model, price, color);
-	}
-	
 	/**
 	 * функція для формування нового об'єкта Smartphone відповідно до даних, введених з клавіатури 
 	 * @return

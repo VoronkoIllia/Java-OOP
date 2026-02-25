@@ -3,7 +3,7 @@ package com.main.phones;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Phone implements Serializable{
+public abstract class Phone implements Serializable, Comparable<Phone>{
 	
 	/**
 	 * 
@@ -170,5 +170,9 @@ public class Phone implements Serializable{
 	public int hashCode() {
 		return Objects.hash(brand, model, color, price);
 	}
-	
+
+	@Override
+	public int compareTo(Phone phone) {
+		return Double.compare(this.price, phone.price);
+	}
 }
