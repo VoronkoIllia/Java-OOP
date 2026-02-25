@@ -1,6 +1,5 @@
 package com.main;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,7 +16,6 @@ import com.main.phones.Smartphone;
  */
 public class Program {
 
-	public static ArrayList<Phone> phones = new ArrayList<Phone>();
 	public static Scanner scan = new Scanner(System.in);
 	public static Store store;
 	public static DataLayer dataLayer = new DataLayer();
@@ -30,6 +28,7 @@ public class Program {
 		} catch (Exception e) {
 		
 			System.out.println(e.getMessage());
+			return;
 		}
 		
 		while(true) {

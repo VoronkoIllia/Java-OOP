@@ -162,12 +162,13 @@ public class Phone implements Serializable{
 		
 		return this.brand.equals(((Phone)phone).brand) && 
 				this.model.equals(((Phone)phone).model)
-				&& this.color.equals(((Phone)phone).color);
+				&& this.color.equals(((Phone)phone).color)
+				&& this.price == ((Phone)phone).getPrice();
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(brand, model, color);
+		return Objects.hash(brand, model, color, price);
 	}
 	
 }
