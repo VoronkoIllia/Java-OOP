@@ -1,7 +1,6 @@
 package com.main;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -14,8 +13,8 @@ import com.main.phones.Smartphone;
 
 /**
  * Воронко Ілля, група ІН-33
- * Лабораторна робота 14
- * Inner classes, interface Comparator
+ * Лабораторна робота 15
+ * Lambda expressions (заміна анонімних класів Comparator на лямбда-вирази)
  */
 public class Program {
 
@@ -268,34 +267,19 @@ public class Program {
 						
 						if(chosenOption == 1) {
 							// сортуємо за полем brand
-							phones.sort(new Comparator<Phone>() {
-								@Override
-								public int compare(Phone p1, Phone p2) {
-									return p1.getBrand().compareTo(p2.getBrand());
-								}
-							});
+							phones.sort((p1, p2) -> p1.getBrand().compareTo(p2.getBrand()));
 							
 							sortTypeTitle += "бренд";
 						}
 						else if(chosenOption == 2) {
 							// сортуємо за полем price
-							phones.sort(new Comparator<Phone>() {
-								@Override
-								public int compare(Phone p1, Phone p2) {
-									return Double.compare(p1.getPrice(), p2.getPrice());
-								}
-							});
+							phones.sort((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()));
 							
 							sortTypeTitle += "вартість";
 						}
 						else if(chosenOption == 3) {
 							// сортуємо за полем color
-							phones.sort(new Comparator<Phone>() {
-								@Override
-								public int compare(Phone p1, Phone p2) {
-									return p1.getColor().compareTo(p2.getColor());
-								}
-							});
+							phones.sort((p1, p2) -> p1.getColor().compareTo(p2.getColor()));
 							
 							sortTypeTitle += "колір";
 						}
