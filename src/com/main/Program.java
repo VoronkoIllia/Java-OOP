@@ -1,7 +1,7 @@
 package com.main;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -14,13 +14,13 @@ import com.main.phones.Smartphone;
 
 /**
  * Воронко Ілля, група ІН-33
- * Лабораторна робота 11
- * Колекції, агрегація, класи-обгортки
+ * Лабораторна робота 14
+ * Inner classes, interface Comparator
  */
 public class Program {
 
 	public static Scanner scan = new Scanner(System.in);
-	public static Store store = new Store();
+	public static Store store;
 	public static DataLayer dataLayer = new DataLayer();
 	
 	public static void main(String[] args) {
@@ -43,7 +43,7 @@ public class Program {
 			System.out.println("1. Додати новий об'єкт до списку");
 			System.out.println("2. Відобразити список усіх об'єктів");
 			System.out.println("3. Пошук об'єктів у списку");
-			System.out.println("4. РОздрукувати відсортовану колекцію об'єктів");
+			System.out.println("4. Роздрукувати відсортовану колекцію об'єктів");
 			System.out.println("0. Завершити роботу");
 			
 			
@@ -243,26 +243,76 @@ public class Program {
 					clearConsole();
 					break;
 				case 4:
-					clearConsole();
-					
-					Map<Phone, Integer> inventory = store.getAllPhones();
-					// отримуємо список об'єктів у Store
-					List<Phone> phones = new ArrayList<Phone>();
-					phones.addAll(inventory.keySet());
-					
-					// сортуємо список
-					Collections.sort(phones);
-					
-					// друкуємо результат
-					for(Phone phone: phones) {
-						System.out.println(phone);
-						System.out.println("Доступно на складі: " + inventory.get(phone));
-						System.out.println();
+					while(true) 
+					{
+						clearConsole();
+						System.out.println("======= Меню сортування об'єктів =======");
+						System.out.println("1. Сортування за брендом");
+						System.out.println("2. Сортування за вартістю");
+						System.out.println("3. Сортування за кольором");
+						System.out.println("0. Повернутися у меню");
+						
+						chosenOption = getUserOption(0, 3);
+						
+						if(chosenOption == 0) { 
+							break; 
+						}
+						
+						
+						Map<Phone, Integer> inventory = store.getAllPhones();
+						// отримуємо список об'єктів у Store
+						List<Phone> phones = new ArrayList<Phone>();
+						phones.addAll(inventory.keySet());
+						
+						String sortTypeTitle = "\t\tВідсортовано за: ";
+						
+						if(chosenOption == 1) {
+							// сортуємо за полем brand
+							phones.sort(new Comparator<Phone>() {
+								@Override
+								public int compare(Phone p1, Phone p2) {
+									return p1.getBrand().compareTo(p2.getBrand());
+								}
+							});
+							
+							sortTypeTitle += "бренд";
+						}
+						else if(chosenOption == 2) {
+							// сортуємо за полем price
+							phones.sort(new Comparator<Phone>() {
+								@Override
+								public int compare(Phone p1, Phone p2) {
+									return Double.compare(p1.getPrice(), p2.getPrice());
+								}
+							});
+							
+							sortTypeTitle += "вартість";
+						}
+						else if(chosenOption == 3) {
+							// сортуємо за полем color
+							phones.sort(new Comparator<Phone>() {
+								@Override
+								public int compare(Phone p1, Phone p2) {
+									return p1.getColor().compareTo(p2.getColor());
+								}
+							});
+							
+							sortTypeTitle += "колір";
+						}
+						
+						
+						// друкуємо результат
+						System.err.println(sortTypeTitle);
+						for(Phone phone: phones) {
+							System.out.println(phone);
+							System.out.println("Доступно на складі: " + inventory.get(phone));
+							System.out.println();
+						}
+			
+						scan.nextLine();
+						System.out.print("Щоб повернутися до меню натисніть Enter...");
+						scan.nextLine();
 					}
-		
-					scan.nextLine();
-					System.out.print("Щоб повернутися до головного меню натисніть Enter...");
-					scan.nextLine();
 					clearConsole();
 					break;
 				case 0:
