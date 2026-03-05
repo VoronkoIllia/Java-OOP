@@ -1,6 +1,11 @@
 package com.main;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 
 import com.main.phones.GamingSmartphone;
@@ -11,16 +16,48 @@ import com.main.phones.Smartphone;
 
 /**
  * Воронко Ілля, група ІН-33
- * Лабораторна робота 11
- * Колекції, агрегація, класи-обгортки
+ * Лабораторна робота 12
+ * Робота з базою даних
  */
 public class Program {
 
 	public static Scanner scan = new Scanner(System.in);
 	public static Store store;
 	public static DataLayer dataLayer = new DataLayer();
+	public static PhoneRepository phoneRepository;
 	
 	public static void main(String[] args) {
+		
+		// отримуємо шлях до налаштувань
+		if(args.length == 0) {
+			System.out.println("Error: missing argument 'config-path'\nCorrect usage: java Program your-config-path");
+			return;
+		}
+		
+		String path = args[0];
+		
+		//перевіряємо існування файла
+		File configFile = new File(path);
+		if(!configFile.isFile()) {
+			System.out.printf("Error: File %s doesn't exist or is a directory!\n", path);
+			return;
+		}
+		
+		// зчитуємо налаштування
+		Properties config = new Properties();
+		try(FileInputStream fis = new FileInputStream(configFile)){
+			config.load(fis);
+			
+		} catch (IOException e) {
+			System.out.printf("Error while reading file %s\n", path);
+			return;
+		}
+		
+		String url = config.getProperty("db.url");
+		String username = config.getProperty("db.username");
+		String password = config.getProperty("db.password");
+		
+		phoneRepository = new PhoneRepository(url, username, password);
 		
 		//зчитуємо дані з файла
 		try {
@@ -75,6 +112,15 @@ public class Program {
 							String answer = scan.next();
 							if(answer.equals("Y") || answer.equals("y")) {
 								store.addNewPhone(newPhone, count);
+								
+								//записуємо дані у БД
+								try {
+									phoneRepository.insert(newPhone);
+								} catch (SQLException e) {
+									System.out.println("Помилка підключення до БД");
+									return;
+								}
+								
 							}
 							
 							// запитуємо, чи бажає користувач продовжити запис
@@ -103,6 +149,14 @@ public class Program {
 							String answer = scan.next();
 							if(answer.equals("Y") || answer.equals("y")) {
 								store.addNewPhone(newSmartphone, count);
+								
+								//записуємо дані у БД
+								try {
+									phoneRepository.insert(newSmartphone);
+								} catch (SQLException e) {
+									System.out.println("Помилка підключення до БД");
+									return;
+								}
 							}
 							
 							// запитуємо, чи бажає користувач продовжити запис
@@ -129,6 +183,14 @@ public class Program {
 							String answer = scan.next();
 							if(answer.equals("Y") || answer.equals("y")) {
 								store.addNewPhone(newKeypadPhone, count);
+								
+								//записуємо дані у БД
+								try {
+									phoneRepository.insert(newKeypadPhone);
+								} catch (SQLException e) {
+									System.out.println("Помилка підключення до БД");
+									return;
+								}
 							}
 							
 							// запитуємо, чи бажає користувач продовжити запис
@@ -155,6 +217,13 @@ public class Program {
 							String answer = scan.next();
 							if(answer.equals("Y") || answer.equals("y")) {
 								store.addNewPhone(newGamingSmartphone, count);
+								//записуємо дані у БД
+								try {
+									phoneRepository.insert(newGamingSmartphone);
+								} catch (SQLException e) {
+									System.out.println("Помилка підключення до БД");
+									return;
+								}
 							}
 							
 							// запитуємо, чи бажає користувач продовжити запис
@@ -182,6 +251,13 @@ public class Program {
 							String answer = scan.next();
 							if(answer.equals("Y") || answer.equals("y")) {
 								store.addNewPhone(newRuggedKeypadPhone, count);
+								//записуємо дані у БД
+								try {
+									phoneRepository.insert(newRuggedKeypadPhone);
+								} catch (SQLException e) {
+									System.out.println("Помилка підключення до БД");
+									return;
+								}
 							}
 							
 							// запитуємо, чи бажає користувач продовжити запис
