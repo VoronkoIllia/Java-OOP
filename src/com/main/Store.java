@@ -1,8 +1,11 @@
 package com.main;
 
 import java.io.Serializable;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 import com.main.phones.Phone;
 
@@ -115,5 +118,15 @@ public class Store implements Serializable {
 		this.isOpen = isOpen;
 	}
 	
-	
+	public Entry<Phone, Integer> findByUUID(UUID uuid) {
+		
+		for(Phone phone: inventory.keySet()) 
+		{
+			if(phone.getUUID().equals(uuid)) 
+			{
+				return new SimpleEntry<Phone, Integer>(phone, inventory.get(phone));
+			}
+		}
+		return null;
+	}
 }

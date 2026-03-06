@@ -2,13 +2,21 @@ package com.main.phones;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
-public abstract class Phone implements Serializable, Comparable<Phone>{
+import com.interfaces.Identifiable;
+
+public abstract class Phone implements Serializable, Comparable<Phone>, Identifiable {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * унікальний ідентифікатор
+	 */
+	private UUID uuid;
 	/**
 	 * бренд смартфона
 	 */
@@ -33,6 +41,7 @@ public abstract class Phone implements Serializable, Comparable<Phone>{
 
 	// конструктор за замовчуванням
 	public Phone() {
+		this.uuid = UUID.randomUUID();
 		this.brand = "no brand";
 		this.model = "no model";
 		this.price = 0.01;
@@ -46,15 +55,12 @@ public abstract class Phone implements Serializable, Comparable<Phone>{
 	 * 
 	 * @param brand - бренд телефона
 	 * @param model - модель телефона
-	 * @param os -операційна система телефона
 	 * @param price - вартість телефона
-	 * @param sizeMemory - об'єм внутрішньої пам'яті телефона
-	 * @param sizeRAM - об'єм оперативної пам'яті телефона
 	 * @param color - колір телефона
-	 * @throws Exception - якщо який-небудь параметр має неприпустиме значення
 	 */
 	public Phone(String brand, String model, double price, String color)
 	{
+		this.uuid = UUID.randomUUID();
 		// заповнення полів об'єкта
 		this.brand = brand;
 		this.model = model;
@@ -65,11 +71,16 @@ public abstract class Phone implements Serializable, Comparable<Phone>{
 
 	// конструктор копіювання
 	public Phone(Phone phone) {
+		this.uuid = UUID.randomUUID();
 		this.brand = phone.brand;
 		this.model = phone.model;
 		this.price = phone.price;
 		this.color = phone.color;
 		
+	}
+	
+	public UUID getUUID() {
+		return this.uuid;
 	}
 	
 	public String getBrand() {
@@ -148,8 +159,9 @@ public abstract class Phone implements Serializable, Comparable<Phone>{
 	
 	@Override
 	public String toString() {
-		return "Бренд: " + this.brand +"\n"
-			 + "Модель: " + this.model + "\n"
+		return "UUID: " + this.uuid +"\n"
+		+ "Бренд: " + this.brand +"\n"
+		+ "Модель: " + this.model + "\n"
 		+ "Вартість: " + this.price + " у. о. \n"
 		+ "Колір: " + this.color;
 		

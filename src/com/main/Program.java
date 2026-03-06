@@ -3,7 +3,9 @@ package com.main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.UUID;
 
 import com.main.phones.GamingSmartphone;
 import com.main.phones.KeypadPhone;
@@ -22,7 +24,7 @@ public class Program {
 	public static Store store;
 	public static DataLayer dataLayer = new DataLayer();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
 		//зчитуємо дані з файла
 		try {
@@ -32,7 +34,6 @@ public class Program {
 			System.out.println(e.getMessage());
 			return;
 		}
-
 		
 		while(true) {
 			int chosenOption;
@@ -41,12 +42,13 @@ public class Program {
 			System.out.println("======= Меню програми =======");
 			System.out.println("1. Додати новий об'єкт до списку");
 			System.out.println("2. Відобразити список усіх об'єктів");
-			System.out.println("3. Пошук об'єктів у списку");
+			System.out.println("3. Фільтрація об'єктів у списку");
 			System.out.println("4. Роздрукувати відсортовану колекцію об'єктів");
+			System.out.println("5. Пошук за UUID");
 			System.out.println("0. Завершити роботу");
 			
 			
-			chosenOption = getUserOption(0, 4);
+			chosenOption = getUserOption(0, 5);
 			
 			
 			switch(chosenOption) {
@@ -298,6 +300,54 @@ public class Program {
 						scan.nextLine();
 					}
 					clearConsole();
+					break;
+				case 5:
+					while(true) 
+					{
+						clearConsole();
+						
+						if(scan.hasNextLine()) {
+							scan.nextLine();
+						}
+						
+						UUID enteredUUID;
+						while(true) 
+						{
+							try 
+							{
+								System.out.print("Введіть UUID об'єкта, який бажаєте знайти: ");
+								String userInput = scan.nextLine();
+								enteredUUID = UUID.fromString(userInput);
+								break;
+							}
+							catch(IllegalArgumentException e) 
+							{
+								System.out.println("Введене значення не є UUID! Спробуйте ще раз");
+							}
+							
+						}
+						
+						Entry<Phone, Integer> foundPhone = store.findByUUID(enteredUUID);
+						
+						
+						if(foundPhone == null) {
+							System.out.println("Потрібних елементів не знайдено.");
+						}
+						else {
+							System.out.println("===== Результати пошуку =====");
+							System.out.println(foundPhone.getKey());
+							System.out.println("Доступно на складі: " + foundPhone.getValue());
+							System.out.println();
+						}
+						
+						System.out.print("Бажаєте продовжити пошук? (Y/n): ");
+						String answer = scan.next();
+						if(answer.equals("Y") || answer.equals("y")) {
+							continue;
+						}
+						
+						break;
+					}
 					break;
 				case 0:
 					try {
